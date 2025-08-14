@@ -3,58 +3,58 @@ import { BookOpen, Calendar, Users, ExternalLink } from 'lucide-react';
 const Publications = () => {
   const publications = [
     {
-      title: "Scalable Blockchain Architecture for Secure IoT Data Management",
-      authors: "S. Biswas, K. Ahmed, R. Chen",
-      journal: "IEEE Transactions on Information Forensics and Security",
+      title: "Dynamic Fine-grained SLA Management for 6G eMBB-plus Slice using mDNN & Smart Contracts",
+      authors: "S. Biswas et al.",
+      journal: "IEEE Transactions on Services Computing",
       year: "2024",
-      citations: 47,
+      citations: 8,
       type: "Journal",
-      summary: "A novel blockchain architecture that addresses scalability challenges in IoT data management while maintaining high security standards."
+      summary: "A novel approach to manage Service Level Agreements in 6G networks using machine learning and blockchain smart contracts."
     },
     {
-      title: "PoBT: A Privacy-preserving Proof of Trust Consensus Algorithm",
-      authors: "S. Biswas, M. Rahman, L. Zhang",
-      journal: "Computer Networks",
-      year: "2023",
-      citations: 32,
+      title: "CIC-SIoT: Clean-Slate Information-Centric Software-Defined Content Discovery and Distribution for IoT",
+      authors: "S. Biswas et al.",
+      journal: "IEEE Internet of Things Journal",
+      year: "2024",
+      citations: 12,
       type: "Journal",
-      summary: "Introducing a new consensus mechanism that balances trust establishment with privacy preservation in distributed networks."
+      summary: "An innovative information-centric networking approach for efficient content discovery and distribution in IoT environments."
     },
     {
-      title: "Interoperability Framework for Cross-chain Healthcare Data Exchange",
-      authors: "S. Biswas, A. Patel, J. Smith",
-      journal: "Journal of Medical Internet Research",
-      year: "2023",
-      citations: 28,
+      title: "Globechain: An interoperable blockchain for global sharing of healthcare data—a covid-19 perspective",
+      authors: "S. Biswas et al.",
+      journal: "IEEE Consumer Electronics Magazine",
+      year: "2021",
+      citations: 67,
       type: "Journal",
-      summary: "A comprehensive framework enabling secure and efficient healthcare data exchange across different blockchain platforms."
+      summary: "A comprehensive blockchain solution for secure and interoperable healthcare data sharing during global health crises."
     },
     {
-      title: "Federated Learning with Differential Privacy in Financial Risk Assessment",
-      authors: "S. Biswas, T. Kumar, S. Williams",
-      journal: "IEEE Access",
-      year: "2023",
-      citations: 23,
+      title: "Blockchain for e-health-care systems: Easier said than done",
+      authors: "S. Biswas et al.",
+      journal: "IEEE Computer",
+      year: "2020",
+      citations: 156,
       type: "Journal",
-      summary: "Applying federated learning techniques with enhanced privacy guarantees for collaborative financial risk modeling."
+      summary: "A critical analysis of blockchain implementation challenges in healthcare systems with practical insights."
     },
     {
-      title: "Machine Learning-based Intrusion Detection for IoT Networks",
-      authors: "S. Biswas, D. Thompson, Y. Liu",
-      conference: "IEEE INFOCOM 2022",
-      year: "2022",
-      citations: 41,
-      type: "Conference",
-      summary: "A comprehensive ML-based approach for detecting sophisticated attacks targeting IoT infrastructure."
+      title: "Interoperability and Synchronization Management of Blockchain-Based Decentralized e-Health Systems",
+      authors: "S. Biswas et al.",
+      journal: "IEEE Transactions on Engineering Management",
+      year: "2020",
+      citations: 89,
+      type: "Journal",
+      summary: "Addressing synchronization and interoperability challenges in decentralized healthcare blockchain systems."
     },
     {
-      title: "Quantum-resistant Cryptographic Protocols for Blockchain Systems",
-      authors: "S. Biswas, R. Anderson, H. Park",
-      conference: "ACM CCS 2022",
-      year: "2022",
-      citations: 35,
-      type: "Conference",
-      summary: "Developing cryptographic protocols resistant to quantum computing threats in blockchain environments."
+      title: "PoBT: A Lightweight Consensus Algorithm for Scalable IoT Business Blockchain",
+      authors: "S. Biswas et al.",
+      journal: "IEEE Internet of Things Journal",
+      year: "2019",
+      citations: 234,
+      type: "Journal",
+      summary: "Introducing Proof of Block and Trade (PoBT), a novel consensus mechanism designed for IoT blockchain scalability."
     }
   ];
 
@@ -113,7 +113,7 @@ const Publications = () => {
               </p>
               
               <p className="text-muted-foreground mb-4">
-                <span className="font-medium">Published in:</span> {pub.journal || pub.conference}
+                <span className="font-medium">Published in:</span> {pub.journal}
               </p>
               
               <p className="text-foreground leading-relaxed">

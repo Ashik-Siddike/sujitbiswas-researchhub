@@ -13,11 +13,14 @@ const Hero = () => {
               </h1>
               <div className="flex items-center space-x-2 text-primary">
                 <MapPin size={20} />
-                <span className="text-lg font-medium">City, University of London</span>
+                <span className="text-lg font-medium">City-St. George's, University of London</span>
               </div>
               <p className="text-xl text-muted-foreground leading-relaxed">
-                Assistant Professor (Lecturer equivalent), Cybersecurity & FinTech, Department of Computer Science, 
-                School of Science & Technology, City, University of London, UK.
+                Lecturer in Cybersecurity and FinTech, Department of Computer Science, 
+                City-St. George's, University of London, UK.
+              </p>
+              <p className="text-lg text-muted-foreground">
+                Research Associate (Honorary), Centre for Blockchain Technology, UCL, UK
               </p>
             </div>
 
@@ -28,7 +31,7 @@ const Hero = () => {
                 </div>
                 <h3 className="font-semibold text-foreground mb-2">Researcher</h3>
                 <p className="text-sm text-muted-foreground">
-                  Advancing blockchain, cybersecurity, and IoT technologies
+                  Blockchain, AI, IoT, and security issues in ML
                 </p>
               </div>
 
@@ -38,7 +41,7 @@ const Hero = () => {
                 </div>
                 <h3 className="font-semibold text-foreground mb-2">Educator</h3>
                 <p className="text-sm text-muted-foreground">
-                  Teaching cybersecurity and resilience to future experts
+                  Teaching cybersecurity, FinTech, and emerging technologies
                 </p>
               </div>
 
@@ -46,9 +49,9 @@ const Hero = () => {
                 <div className="w-12 h-12 bg-gradient-primary rounded-full flex items-center justify-center mx-auto mb-4">
                   <span className="text-white font-bold">C</span>
                 </div>
-                <h3 className="font-semibold text-foreground mb-2">Collaborator</h3>
+                <h3 className="font-semibold text-foreground mb-2">Innovator</h3>
                 <p className="text-sm text-muted-foreground">
-                  Building partnerships for innovative solutions
+                  Leading £394K+ in research projects and industry partnerships
                 </p>
               </div>
             </div>

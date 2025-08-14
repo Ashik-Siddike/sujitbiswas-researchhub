@@ -3,72 +3,72 @@ import { MapPin, GraduationCap, Globe, Award, Calendar, Building } from 'lucide-
 const About = () => {
   const education = [
     {
-      degree: "PhD in Computer Science",
+      degree: "PhD in Computer Science and Technology",
       institution: "Beijing Institute of Technology",
       year: "2019",
       location: "Beijing, China",
-      focus: "Distributed Systems and Network Security"
-    },
-    {
-      degree: "MSc in Computer Science",
-      institution: "University of Dhaka",
-      year: "2015",
-      location: "Dhaka, Bangladesh",
-      focus: "Software Engineering and Data Security"
-    },
-    {
-      degree: "BSc in Computer Science and Engineering",
-      institution: "University of Dhaka",
-      year: "2013",
-      location: "Dhaka, Bangladesh",
-      focus: "Computer Systems and Programming"
+      focus: "Blockchain Technology, Cybersecurity, and Distributed Systems"
     }
   ];
 
   const experience = [
     {
-      position: "Assistant Professor",
-      institution: "City, University of London",
-      period: "2023 - Present",
+      position: "Lecturer in Cybersecurity and FinTech",
+      institution: "City-St. George's, University of London",
+      period: "2024 - Present",
       location: "London, UK",
       description: "Teaching and research in cybersecurity, FinTech, and blockchain technologies."
     },
     {
-      position: "Research Fellow",
-      institution: "University College London (UCL)",
+      position: "Lecturer",
+      institution: "University of East London",
       period: "2022 - 2023",
-      location: "London, UK",
-      description: "Conducted research on privacy-preserving technologies and secure distributed systems."
+      location: "London, UK", 
+      description: "Delivered courses in cybersecurity, network security, and computer science."
     },
     {
-      position: "Lecturer in Computer Science",
-      institution: "University of East London",
-      period: "2020 - 2022",
-      location: "London, UK", 
-      description: "Delivered courses in cybersecurity, network security, and software engineering."
+      position: "Research Associate (Honorary)",
+      institution: "Centre for Blockchain Technology, UCL",
+      period: "2022 - Present",
+      location: "London, UK",
+      description: "Ongoing research collaboration on blockchain technology and distributed systems."
+    },
+    {
+      position: "Research Fellow",
+      institution: "University of Surrey",
+      period: "2021 - 2022",
+      location: "Guildford, UK",
+      description: "Advanced research in IoT security and blockchain applications."
     },
     {
       position: "Assistant Professor",
-      institution: "University of Surrey",
-      period: "2019 - 2020",
-      location: "Guildford, UK",
-      description: "Research and teaching in IoT security and blockchain applications."
+      institution: "University of Dhaka",
+      period: "2018 - 2021",
+      location: "Dhaka, Bangladesh",
+      description: "Teaching and research in computer science and cybersecurity."
+    },
+    {
+      position: "Lecturer",
+      institution: "Jessore Polytechnic Institute",
+      period: "2011 - 2018",
+      location: "Jessore, Bangladesh",
+      description: "Computer science education and technical training programs."
     }
   ];
 
   const languages = [
     { name: "Bengali", level: "Native" },
     { name: "English", level: "Fluent" },
-    { name: "Chinese (Mandarin)", level: "Intermediate" },
+    { name: "Chinese (Cantonese)", level: "Intermediate" },
     { name: "Hindi", level: "Conversational" }
   ];
 
   const honors = [
-    "Best Paper Award - IEEE INFOCOM 2022",
-    "Early Career Researcher Award - Royal Society 2021",
-    "Outstanding Teaching Award - University of East London 2021",
-    "Young Scientist Award - China-UK Science Bridge 2020",
-    "Excellence in Research Award - University of Surrey 2019"
+    "Most Distinguished Student Award - Beijing Institute of Technology (2019)",
+    "Fellow, Higher Education Academy (FHEA), UK",
+    "Senior Member, IEEE",
+    "Life Member, Bangladesh Computer Society",
+    "Editorial Board Member, MDPI Blockchains Journal"
   ];
 
   return (
@@ -94,18 +94,18 @@ const About = () => {
               </h3>
               <div className="space-y-4 text-muted-foreground leading-relaxed">
                 <p>
-                  My research journey began with a fascination for how technology can solve real-world security challenges. 
-                  With a PhD from Beijing Institute of Technology and extensive experience across multiple institutions, 
-                  I bring a global perspective to cybersecurity research.
+                  I am a researcher with hands-on experience in Blockchain and AI, focused on IoT, medical data prediction, 
+                  federated learning, and security issues in ML. With a PhD from Beijing Institute of Technology and 
+                  extensive international experience, I bring a global perspective to cybersecurity research.
                 </p>
                 <p>
-                  I believe in bridging the gap between theoretical research and practical applications. My work focuses on 
-                  developing innovative solutions that not only advance academic knowledge but also address pressing industry needs 
-                  in cybersecurity, blockchain technology, and emerging digital systems.
+                  My research spans across multiple domains including blockchain technology, cybersecurity, FinTech innovation, 
+                  and privacy-preserving machine learning. I am passionate about developing practical solutions that address 
+                  real-world challenges while advancing theoretical understanding in these rapidly evolving fields.
                 </p>
                 <p>
-                  As an educator, I am committed to inspiring the next generation of cybersecurity professionals through 
-                  hands-on learning, critical thinking, and exposure to cutting-edge research methodologies.
+                  Currently supervising 3 PhD students and 5 Masters students, I am committed to nurturing the next generation 
+                  of researchers and practitioners in cybersecurity and emerging technologies through mentorship and collaborative research.
                 </p>
               </div>
             </div>

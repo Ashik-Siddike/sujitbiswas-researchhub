@@ -3,58 +3,40 @@ import { Folder, Clock, Users, Link, ArrowRight } from 'lucide-react';
 const Projects = () => {
   const projects = [
     {
-      title: "SecureChain: Privacy-Preserving Blockchain Platform",
-      description: "Developing a next-generation blockchain platform with built-in privacy features and quantum-resistant cryptography.",
+      title: "iCARE: Intelligent, Customised Admissions and Recruitment Engagement platform",
+      description: "Developing an AI-powered platform to revolutionize university admissions and recruitment processes with intelligent matching and personalized engagement.",
       status: "Ongoing",
-      duration: "2023 - 2025",
-      collaborators: ["UCL", "Cambridge University", "IBM Research"],
-      funding: "£750,000 - EPSRC Grant",
-      outcomes: ["3 publications", "2 patent applications", "Open-source platform"]
+      duration: "2025 - 2027",
+      collaborators: ["Innovate UK", "Industry Partners"],
+      funding: "£268,000 - Innovate UK & Industry",
+      outcomes: ["AI platform", "Industry partnerships", "Research publications"]
     },
     {
-      title: "FinTech Security Framework",
-      description: "Creating comprehensive security frameworks for emerging FinTech applications and digital payment systems.",
+      title: "Framework for Privacy-Preserving Data Extraction and Synthesis",
+      description: "Creating advanced frameworks for secure data extraction and synthesis while maintaining privacy guarantees in sensitive domains.",
       status: "Ongoing",
-      duration: "2024 - 2026",
-      collaborators: ["Bank of England", "Mastercard Labs", "City University"],
-      funding: "£500,000 - Industry Partnership",
-      outcomes: ["Security standards", "Industry guidelines", "Risk assessment tools"]
+      duration: "2025 - 2028",
+      collaborators: ["Industry Partners", "City University London"],
+      funding: "£126,000 - Industry & University",
+      outcomes: ["Privacy frameworks", "Synthesis tools", "Security protocols"]
     },
     {
-      title: "IoT Mesh Security Protocol",
-      description: "Designing secure communication protocols for large-scale IoT mesh networks with dynamic topology.",
+      title: "Blockchain-Based Public Examination Management System",
+      description: "Implementing a transparent and secure blockchain solution for managing public examinations in Bangladesh.",
       status: "Completed",
-      duration: "2021 - 2023",
-      collaborators: ["ARM Holdings", "University of Surrey", "Siemens"],
-      funding: "£400,000 - Innovate UK",
-      outcomes: ["RFC draft", "5 publications", "Commercial implementation"]
+      duration: "2021",
+      collaborators: ["ICTD Bangladesh", "Government Partners"],
+      funding: "0.6M BDT - ICTD Bangladesh",
+      outcomes: ["Blockchain platform", "Government adoption", "Security enhancement"]
     },
     {
-      title: "Federated Learning for Healthcare",
-      description: "Implementing privacy-preserving federated learning systems for collaborative medical research.",
-      status: "Ongoing",
-      duration: "2023 - 2024",
-      collaborators: ["NHS Digital", "Oxford University", "DeepMind Health"],
-      funding: "£300,000 - Wellcome Trust",
-      outcomes: ["Clinical trials", "Privacy framework", "ML models"]
-    },
-    {
-      title: "Quantum-Safe Cryptography Standards",
-      description: "Contributing to international standards for post-quantum cryptographic protocols in distributed systems.",
-      status: "Ongoing",
-      duration: "2022 - 2025",
-      collaborators: ["NIST", "ETSI", "European Commission"],
-      funding: "€200,000 - Horizon Europe",
-      outcomes: ["Standard specifications", "Reference implementations", "Security analysis"]
-    },
-    {
-      title: "Smart Contract Verification Tool",
-      description: "Automated verification system for detecting vulnerabilities and ensuring correctness in smart contracts.",
+      title: "Remote Management of Smart Farming",
+      description: "Developing IoT and blockchain-based solutions for remote monitoring and management of agricultural systems.",
       status: "Completed",
-      duration: "2020 - 2022",
-      collaborators: ["Ethereum Foundation", "ConsenSys", "Imperial College"],
-      funding: "£250,000 - Royal Society",
-      outcomes: ["Open-source tool", "1000+ contracts verified", "Industry adoption"]
+      duration: "2021",
+      collaborators: ["ICTD Bangladesh", "Agricultural Partners"],
+      funding: "0.5M BDT - ICTD Bangladesh",
+      outcomes: ["IoT platform", "Agricultural innovation", "Rural technology adoption"]
     }
   ];
 

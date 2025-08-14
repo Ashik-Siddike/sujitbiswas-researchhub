@@ -48,8 +48,8 @@ const ResearchAreas = () => {
             Research Areas
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Exploring cutting-edge technologies and developing innovative solutions 
-            across cybersecurity, blockchain, and emerging digital technologies.
+            Research with hands-on experience in Blockchain and AI, focused on IoT, 
+            medical data prediction, federated learning, and security issues in ML.
           </p>
         </div>
 

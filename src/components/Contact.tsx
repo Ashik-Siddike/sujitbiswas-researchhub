@@ -4,9 +4,15 @@ const Contact = () => {
   const contactInfo = [
     {
       icon: Mail,
-      label: "Email",
+      label: "University Email",
       value: "sujit.biswas@city.ac.uk",
       link: "mailto:sujit.biswas@city.ac.uk"
+    },
+    {
+      icon: Mail,
+      label: "Professional Email",
+      value: "sujitbiswas@ieee.org",
+      link: "mailto:sujitbiswas@ieee.org"
     },
     {
       icon: Phone,
@@ -17,7 +23,7 @@ const Contact = () => {
     {
       icon: MapPin,
       label: "Office Address",
-      value: "Department of Computer Science, City, University of London, Northampton Square, London EC1V 0HB, UK",
+      value: "City-St. George's, University of London, Northampton Square, London EC1V 0HB, UK",
       link: "https://maps.google.com/?q=City+University+London+Northampton+Square"
     },
     {
@@ -31,28 +37,28 @@ const Contact = () => {
   const socialLinks = [
     {
       name: "Google Scholar",
-      url: "https://scholar.google.com/citations?user=example",
+      url: "https://scholar.google.com/citations?user=eTiiXkYAAAAJ",
       description: "Academic publications and citations"
     },
     {
       name: "LinkedIn",
-      url: "https://linkedin.com/in/sujit-biswas",
+      url: "https://www.linkedin.com/in/sujitedu/",
       description: "Professional network and updates"
     },
     {
-      name: "ResearchGate",
-      url: "https://researchgate.net/profile/Sujit-Biswas",
-      description: "Research collaboration platform"
+      name: "UCL Blockchain Centre",
+      url: "https://www.ucl.ac.uk/blockchain/",
+      description: "Research Associate (Honorary)"
     },
     {
-      name: "GitHub",
-      url: "https://github.com/sujitbiswas",
-      description: "Code repositories and projects"
+      name: "City University Profile",
+      url: "https://www.citystgeorges.ac.uk/about/people/academics/sujit-biswas",
+      description: "Official university profile"
     },
     {
-      name: "ORCID",
-      url: "https://orcid.org/0000-0000-0000-0000",
-      description: "Academic identifier and publications"
+      name: "Personal Website",
+      url: "https://sujitbiswas.info/",
+      description: "Professional portfolio and CV"
     }
   ];
 
