@@ -1,96 +1,53 @@
 import { ArrowRight, MapPin } from 'lucide-react';
-import profileImage from '@/assets/profile-image.jpg';
+import { Button } from '@/components/ui/button';
+import { seedDatabase } from '@/scripts/seedDatabaseBrowser';
 
-const Hero = () => {
+export default function Hero() {
+  const handleSeedDatabase = async () => {
+    try {
+      const result = await seedDatabase();
+      if (result.success) {
+        alert('🎉 Database seeded successfully! Check the admin panel to see all the data.');
+        // Refresh the page to show new data
+        window.location.reload();
+      } else {
+        alert('❌ Error seeding database: ' + result.error);
+      }
+    } catch (error) {
+      alert('❌ Error: ' + error.message);
+    }
+  };
+
   return (
-    <section id="home" className="min-h-screen flex items-center pt-20 bg-gradient-subtle">
-      <div className="container mx-auto px-6 py-12">
-        <div className="grid lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
-          <div className="space-y-6">
-            <div className="space-y-4">
-              <h1 className="text-4xl lg:text-5xl font-bold text-foreground leading-tight">
-                Dr. Sujit Biswas
-              </h1>
-              <div className="flex items-center space-x-2 text-primary">
-                <MapPin size={20} />
-                <span className="text-lg font-medium">City-St. George's, University of London</span>
-              </div>
-              <p className="text-xl text-muted-foreground leading-relaxed">
-                Lecturer in Cybersecurity and FinTech, Department of Computer Science, 
-                City-St. George's, University of London, UK.
-              </p>
-              <p className="text-lg text-muted-foreground">
-                Research Associate (Honorary), Centre for Blockchain Technology, UCL, UK
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 py-8">
-              <div className="text-center p-6 bg-card rounded-lg shadow-card">
-                <div className="w-12 h-12 bg-gradient-primary rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-white font-bold">R</span>
-                </div>
-                <h3 className="font-semibold text-foreground mb-2">Researcher</h3>
-                <p className="text-sm text-muted-foreground">
-                  Blockchain, AI, IoT, and security issues in ML
-                </p>
-              </div>
-
-              <div className="text-center p-6 bg-card rounded-lg shadow-card">
-                <div className="w-12 h-12 bg-gradient-primary rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-white font-bold">E</span>
-                </div>
-                <h3 className="font-semibold text-foreground mb-2">Educator</h3>
-                <p className="text-sm text-muted-foreground">
-                  Teaching cybersecurity, FinTech, and emerging technologies
-                </p>
-              </div>
-
-              <div className="text-center p-6 bg-card rounded-lg shadow-card">
-                <div className="w-12 h-12 bg-gradient-primary rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-white font-bold">C</span>
-                </div>
-                <h3 className="font-semibold text-foreground mb-2">Innovator</h3>
-                <p className="text-sm text-muted-foreground">
-                  Leading £394K+ in research projects and industry partnerships
-                </p>
-              </div>
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-4">
-              <button 
-                onClick={() => document.querySelector('#research')?.scrollIntoView({ behavior: 'smooth' })}
-                className="flex items-center justify-center px-6 py-3 bg-gradient-primary text-white rounded-lg font-medium hover:shadow-elevated transition-all duration-300"
-              >
-                Explore Research
-                <ArrowRight size={18} className="ml-2" />
-              </button>
-              <button 
-                onClick={() => document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' })}
-                className="flex items-center justify-center px-6 py-3 border border-primary text-primary rounded-lg font-medium hover:bg-primary hover:text-white transition-all duration-300"
-              >
-                Get in Touch
-              </button>
-            </div>
+    <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-indigo-50 py-20 sm:py-32">
+      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        <div className="mx-auto max-w-2xl text-center">
+          <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+            Dr. Sujit Biswas
+          </h1>
+          <p className="mt-6 text-lg leading-8 text-gray-600">
+            Senior Lecturer in Cybersecurity & FinTech at City, University of London
+          </p>
+          <p className="mt-4 text-base leading-7 text-gray-500">
+            Leading research in blockchain technology, IoT security, and machine learning applications in cybersecurity
+          </p>
+          
+          <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+            <Button size="lg" className="group">
+              View Research
+              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </Button>
+            <Button variant="outline" size="lg" onClick={handleSeedDatabase}>
+              🌱 Seed Database
+            </Button>
           </div>
-
-          <div className="flex justify-center lg:justify-end">
-            <div className="relative">
-              <div className="w-80 h-80 rounded-full overflow-hidden shadow-elevated">
-                <img 
-                  src={profileImage} 
-                  alt="Dr. Sujit Biswas" 
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-gradient-primary rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-lg">PhD</span>
-              </div>
-            </div>
+          
+          <div className="mt-8 flex items-center justify-center text-sm text-gray-500">
+            <MapPin className="mr-2 h-4 w-4" />
+            City, University of London • Northampton Square, London
           </div>
         </div>
       </div>
     </section>
   );
-};
-
-export default Hero;
+}

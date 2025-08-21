@@ -1,114 +1,120 @@
-import { NavLink, useLocation } from 'react-router-dom';
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarTrigger,
-  useSidebar,
-} from '@/components/ui/sidebar';
+import { Link, useLocation } from "react-router-dom";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { 
-  FileText, 
+  LayoutDashboard, 
   Lightbulb, 
+  FileText, 
   FolderOpen, 
   GraduationCap, 
   Users, 
-  Settings,
-  LogOut,
-  Home
-} from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
-import { Button } from '@/components/ui/button';
+  User,
+  Menu,
+  TestTube
+} from "lucide-react";
 
-const adminItems = [
-  { title: "Publications", url: "/admin/publications", icon: FileText },
-  { title: "Research Areas", url: "/admin/research-areas", icon: Lightbulb },
-  { title: "Projects", url: "/admin/projects", icon: FolderOpen },
-  { title: "Courses", url: "/admin/courses", icon: GraduationCap },
-  { title: "Students", url: "/admin/students", icon: Users },
-  { title: "Profile Info", url: "/admin/profile", icon: Settings },
-];
+interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-export function AdminSidebar() {
-  const { state } = useSidebar();
+export function AdminSidebar({ className }: SidebarProps) {
   const location = useLocation();
-  const { signOut } = useAuth();
-  const currentPath = location.pathname;
-  const collapsed = state === "collapsed";
 
-  const isActive = (path: string) => currentPath === path;
-  const getNavCls = ({ isActive }: { isActive: boolean }) =>
-    isActive ? "bg-primary text-primary-foreground" : "hover:bg-muted/50";
+  const sidebarItems = [
+    {
+      title: "Dashboard",
+      href: "/admin",
+      icon: LayoutDashboard,
+      isActive: location.pathname === "/admin"
+    },
+    {
+      title: "Research Areas",
+      href: "/admin/research-areas",
+      icon: Lightbulb,
+      isActive: location.pathname === "/admin/research-areas"
+    },
+    {
+      title: "Publications",
+      href: "/admin/publications",
+      icon: FileText,
+      isActive: location.pathname === "/admin/publications"
+    },
+    {
+      title: "Research Projects",
+      href: "/admin/projects",
+      icon: FolderOpen,
+      isActive: location.pathname === "/admin/projects"
+    },
+    {
+      title: "Courses",
+      href: "/admin/courses",
+      icon: GraduationCap,
+      isActive: location.pathname === "/admin/courses"
+    },
+    {
+      title: "Students",
+      href: "/admin/students",
+      icon: Users,
+      isActive: location.pathname === "/admin/students"
+    },
+    {
+      title: "Profile",
+      href: "/admin/profile",
+      icon: User,
+      isActive: location.pathname === "/admin/profile"
+    },
+    {
+      title: "Test CRUD",
+      href: "/admin/test",
+      icon: TestTube,
+      isActive: location.pathname === "/admin/test"
+    }
+  ];
 
   return (
-    <Sidebar
-      className={collapsed ? "w-14" : "w-64"}
-      collapsible="icon"
-    >
-      <div className="p-4 border-b">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-            <Settings className="w-4 h-4 text-primary-foreground" />
+    <div className={cn("pb-12", className)}>
+      <div className="space-y-4 py-4">
+        <div className="px-3 py-2">
+          <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
+            Admin Panel
+          </h2>
+          <div className="space-y-1">
+            {sidebarItems.map((item) => (
+              <Link key={item.href} to={item.href}>
+                <Button
+                  variant={item.isActive ? "secondary" : "ghost"}
+                  className={cn(
+                    "w-full justify-start",
+                    item.isActive && "bg-muted font-medium"
+                  )}
+                >
+                  <item.icon className="mr-2 h-4 w-4" />
+                  {item.title}
+                </Button>
+              </Link>
+            ))}
           </div>
-          {!collapsed && (
-            <div>
-              <h2 className="text-lg font-semibold">Admin Panel</h2>
-              <p className="text-sm text-muted-foreground">Content Management</p>
-            </div>
-          )}
         </div>
       </div>
-
-      <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>Navigation</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <NavLink to="/" className={getNavCls}>
-                    <Home className="h-4 w-4" />
-                    {!collapsed && <span>Back to Site</span>}
-                  </NavLink>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
-        <SidebarGroup>
-          <SidebarGroupLabel>Content Management</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {adminItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <NavLink to={item.url} className={getNavCls}>
-                      <item.icon className="h-4 w-4" />
-                      {!collapsed && <span>{item.title}</span>}
-                    </NavLink>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
-        <div className="mt-auto p-4">
-          <Button
-            variant="outline"
-            onClick={signOut}
-            className="w-full justify-start"
-          >
-            <LogOut className="h-4 w-4" />
-            {!collapsed && <span className="ml-2">Sign Out</span>}
-          </Button>
-        </div>
-      </SidebarContent>
-    </Sidebar>
+    </div>
   );
+}
+
+export function AdminSidebarMobile() {
+  return (
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button variant="ghost" size="sm" className="md:hidden">
+          <Menu className="h-5 w-5" />
+        </Button>
+      </SheetTrigger>
+      <SheetContent side="left" className="p-0">
+        <AdminSidebar />
+      </SheetContent>
+    </Sheet>
+  );
+}
+
+export function SidebarTrigger() {
+  return <AdminSidebarMobile />;
 }

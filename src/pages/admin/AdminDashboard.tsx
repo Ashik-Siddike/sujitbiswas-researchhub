@@ -1,5 +1,4 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { SidebarTrigger } from '@/components/ui/sidebar';
 import { FileText, Lightbulb, FolderOpen, GraduationCap, Users, Settings } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -36,8 +35,7 @@ const AdminDashboard = () => {
 
   return (
     <div className="p-6">
-      <div className="flex items-center gap-4 mb-8">
-        <SidebarTrigger />
+      <div className="mb-8">
         <div>
           <h1 className="text-3xl font-bold">Admin Dashboard</h1>
           <p className="text-muted-foreground">Manage your academic portfolio content</p>

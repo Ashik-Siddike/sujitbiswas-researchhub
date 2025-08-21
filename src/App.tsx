@@ -7,7 +7,16 @@ import { AuthProvider } from "@/hooks/useAuth";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Admin from "./pages/Admin";
+import AdminLogin from "./pages/admin/AdminLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import ResearchAreasAdmin from "./pages/admin/ResearchAreasAdmin";
+import PublicationsAdmin from "./pages/admin/PublicationsAdmin";
+import ProjectsAdmin from "./pages/admin/ProjectsAdmin";
+import CoursesAdmin from "./pages/admin/CoursesAdmin";
+import StudentsAdmin from "./pages/admin/StudentsAdmin";
+import ProfileAdmin from "./pages/admin/ProfileAdmin";
+import AdminTest from "./pages/admin/AdminTest";
+import AdminProtectedRoute from "@/components/admin/AdminProtectedRoute";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -22,15 +31,17 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
-            <Route path="/admin" element={<Admin />}>
-              <Route index element={<AdminDashboard />} />
-              <Route path="publications" element={<div>Publications Admin</div>} />
-              <Route path="research-areas" element={<div>Research Areas Admin</div>} />
-              <Route path="projects" element={<div>Projects Admin</div>} />
-              <Route path="courses" element={<div>Courses Admin</div>} />
-              <Route path="students" element={<div>Students Admin</div>} />
-              <Route path="profile" element={<div>Profile Admin</div>} />
-            </Route>
+                            <Route path="/admin/login" element={<AdminLogin />} />
+                <Route path="/admin" element={<AdminProtectedRoute><Admin /></AdminProtectedRoute>}>
+                  <Route index element={<AdminDashboard />} />
+                  <Route path="research-areas" element={<ResearchAreasAdmin />} />
+                  <Route path="publications" element={<PublicationsAdmin />} />
+                  <Route path="projects" element={<ProjectsAdmin />} />
+                  <Route path="courses" element={<CoursesAdmin />} />
+                  <Route path="students" element={<StudentsAdmin />} />
+                  <Route path="profile" element={<ProfileAdmin />} />
+                  <Route path="test" element={<AdminTest />} />
+                </Route>
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
