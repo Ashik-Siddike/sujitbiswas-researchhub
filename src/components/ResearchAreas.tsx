@@ -1,86 +1,102 @@
-import { Shield, Coins, Wifi, Brain, Lock, Network } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
+import * as Icons from 'lucide-react';
+
+interface ResearchArea {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  order_index: number;
+}
 
 const ResearchAreas = () => {
-  const researchAreas = [
-    {
-      icon: Shield,
-      title: 'Blockchain Technology',
-      description: 'Consensus algorithms, privacy mechanisms, and scalability solutions for distributed systems.',
-      topics: ['Consensus Algorithms', 'Privacy Protection', 'Scalability Solutions']
+  const { data: researchAreas = [], isLoading } = useQuery({
+    queryKey: ['research-areas'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('research_areas')
+        .select('*')
+        .order('order_index');
+      
+      if (error) throw error;
+      return data as ResearchArea[];
     },
-    {
-      icon: Coins,
-      title: 'FinTech Innovation',
-      description: 'Financial technology solutions, digital payments, and blockchain-based financial systems.',
-      topics: ['Digital Payments', 'DeFi Solutions', 'Financial Security']
-    },
-    {
-      icon: Lock,
-      title: 'Cybersecurity',
-      description: 'Advanced threat detection, security protocols, and resilience frameworks.',
-      topics: ['Threat Detection', 'Security Protocols', 'Incident Response']
-    },
-    {
-      icon: Wifi,
-      title: 'Internet of Things (IoT)',
-      description: 'Secure IoT architectures, device authentication, and scalable IoT solutions.',
-      topics: ['IoT Security', 'Device Authentication', 'Edge Computing']
-    },
-    {
-      icon: Brain,
-      title: 'Machine Learning',
-      description: 'ML applications in cybersecurity, privacy-preserving algorithms, and federated learning.',
-      topics: ['Privacy-Preserving ML', 'Federated Learning', 'AI Security']
-    },
-    {
-      icon: Network,
-      title: 'Network Security',
-      description: 'Network protocols, distributed systems security, and blockchain interoperability.',
-      topics: ['Protocol Security', 'Interoperability', 'Distributed Systems']
-    }
-  ];
+  });
+
+  if (isLoading) {
+    return (
+      <section id="research" className="py-20 bg-gradient-subtle">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <div className="h-12 bg-muted rounded w-64 mx-auto mb-4 animate-pulse"></div>
+            <div className="h-6 bg-muted rounded w-96 mx-auto animate-pulse"></div>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div key={i} className="h-64 bg-muted rounded-2xl animate-pulse"></div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
-    <section id="research" className="py-20 bg-muted">
+    <section id="research" className="py-20 bg-gradient-subtle">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
+          <h2 className="text-4xl lg:text-6xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-6">
             Research Areas
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
             Research with hands-on experience in Blockchain and AI, focused on IoT, 
             medical data prediction, federated learning, and security issues in ML.
           </p>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {researchAreas.map((area, index) => (
-            <div key={index} className="bg-card rounded-xl shadow-card hover:shadow-elevated transition-all duration-300 p-6 group">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-gradient-primary rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                  <area.icon size={24} className="text-white" />
+          {researchAreas.map((area, index) => {
+            const IconComponent = Icons[area.icon as keyof typeof Icons] as React.ComponentType<any>;
+            
+            return (
+              <div 
+                key={area.id} 
+                className="group bg-card/80 backdrop-blur-sm rounded-2xl shadow-card hover:shadow-elevated transition-all duration-500 p-8 border border-border/50 hover:border-primary/30 hover:-translate-y-3 relative overflow-hidden"
+                style={{ 
+                  animationDelay: `${index * 100}ms`,
+                }}
+              >
+                {/* Gradient overlay on hover */}
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
+                
+                <div className="relative z-10">
+                  <div className="flex items-center mb-6">
+                    <div className="w-16 h-16 bg-gradient-primary rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:shadow-glow transition-all duration-500">
+                      {IconComponent && <IconComponent size={28} className="text-white" />}
+                    </div>
+                    <div className="ml-4 flex-1">
+                      <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors duration-300">
+                        {area.title}
+                      </h3>
+                      <div className="h-0.5 bg-gradient-primary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 mt-2"></div>
+                    </div>
+                  </div>
+                  
+                  <p className="text-muted-foreground leading-relaxed group-hover:text-foreground transition-colors duration-300">
+                    {area.description}
+                  </p>
+
+                  <div className="mt-6 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0">
+                    <div className="flex items-center text-primary text-sm font-medium">
+                      <span>Explore Research</span>
+                      <Icons.ArrowRight size={16} className="ml-2 transform group-hover:translate-x-1 transition-transform duration-300" />
+                    </div>
+                  </div>
                 </div>
-                <h3 className="text-xl font-semibold text-foreground ml-4">
-                  {area.title}
-                </h3>
               </div>
-              
-              <p className="text-muted-foreground mb-4 leading-relaxed">
-                {area.description}
-              </p>
-              
-              <div className="space-y-2">
-                {area.topics.map((topic, topicIndex) => (
-                  <span 
-                    key={topicIndex}
-                    className="inline-block bg-muted px-3 py-1 rounded-full text-sm text-foreground mr-2 mb-2"
-                  >
-                    {topic}
-                  </span>
-                ))}
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
