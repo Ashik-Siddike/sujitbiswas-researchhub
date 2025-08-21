@@ -14,13 +14,261 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      admin_users: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          role?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      courses: {
+        Row: {
+          code: string
+          created_at: string
+          description: string
+          enrollment_count: number | null
+          id: string
+          level: string
+          semester: string
+          title: string
+          updated_at: string
+          year: number
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          description: string
+          enrollment_count?: number | null
+          id?: string
+          level: string
+          semester: string
+          title: string
+          updated_at?: string
+          year: number
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          description?: string
+          enrollment_count?: number | null
+          id?: string
+          level?: string
+          semester?: string
+          title?: string
+          updated_at?: string
+          year?: number
+        }
+        Relationships: []
+      }
+      profile_info: {
+        Row: {
+          created_at: string
+          id: string
+          key: string
+          updated_at: string
+          value: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          key: string
+          updated_at?: string
+          value: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          key?: string
+          updated_at?: string
+          value?: string
+        }
+        Relationships: []
+      }
+      projects: {
+        Row: {
+          collaborators: string[]
+          created_at: string
+          description: string
+          duration: string
+          funding: string
+          id: string
+          outcomes: string[]
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          collaborators?: string[]
+          created_at?: string
+          description: string
+          duration: string
+          funding: string
+          id?: string
+          outcomes?: string[]
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          collaborators?: string[]
+          created_at?: string
+          description?: string
+          duration?: string
+          funding?: string
+          id?: string
+          outcomes?: string[]
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      publications: {
+        Row: {
+          authors: string
+          citations: number | null
+          created_at: string
+          doi: string | null
+          id: string
+          journal: string
+          pages: string | null
+          pdf_url: string | null
+          title: string
+          type: string | null
+          updated_at: string
+          volume: string | null
+          year: number
+        }
+        Insert: {
+          authors: string
+          citations?: number | null
+          created_at?: string
+          doi?: string | null
+          id?: string
+          journal: string
+          pages?: string | null
+          pdf_url?: string | null
+          title: string
+          type?: string | null
+          updated_at?: string
+          volume?: string | null
+          year: number
+        }
+        Update: {
+          authors?: string
+          citations?: number | null
+          created_at?: string
+          doi?: string | null
+          id?: string
+          journal?: string
+          pages?: string | null
+          pdf_url?: string | null
+          title?: string
+          type?: string | null
+          updated_at?: string
+          volume?: string | null
+          year?: number
+        }
+        Relationships: []
+      }
+      research_areas: {
+        Row: {
+          created_at: string
+          description: string
+          icon: string
+          id: string
+          order_index: number | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          icon: string
+          id?: string
+          order_index?: number | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          icon?: string
+          id?: string
+          order_index?: number | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      students: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          degree_type: string
+          end_year: number | null
+          id: string
+          linkedin_url: string | null
+          name: string
+          research_topic: string
+          start_year: number
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          degree_type: string
+          end_year?: number | null
+          id?: string
+          linkedin_url?: string | null
+          name: string
+          research_topic: string
+          start_year: number
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          degree_type?: string
+          end_year?: number | null
+          id?: string
+          linkedin_url?: string | null
+          name?: string
+          research_topic?: string
+          start_year?: number
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      is_admin: {
+        Args: { user_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never
