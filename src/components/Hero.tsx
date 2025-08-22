@@ -22,7 +22,7 @@ export default function Hero() {
               {/* Profile image container */}
               <div className="relative w-80 h-80 sm:w-96 sm:h-96 rounded-full overflow-hidden border-8 border-white shadow-2xl">
                 <img 
-                  src="/src/assets/profile-image.jpg" 
+                  src="/profile-image.jpg" 
                   alt="Dr. Sujit Biswas"
                   className="w-full h-full object-cover object-center"
                 />
