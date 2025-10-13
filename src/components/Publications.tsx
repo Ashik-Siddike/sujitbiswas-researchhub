@@ -1,62 +1,19 @@
 import { BookOpen, Calendar, Users, ExternalLink } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
 
 const Publications = () => {
-  const publications = [
-    {
-      title: "Dynamic Fine-grained SLA Management for 6G eMBB-plus Slice using mDNN & Smart Contracts",
-      authors: "S. Biswas et al.",
-      journal: "IEEE Transactions on Services Computing",
-      year: "2024",
-      citations: 8,
-      type: "Journal",
-      summary: "A novel approach to manage Service Level Agreements in 6G networks using machine learning and blockchain smart contracts."
+  const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
+  
+  const { data: publicationsFromDB = [] } = useQuery({
+    queryKey: ['publications-public'],
+    queryFn: async () => {
+      const res = await fetch(`${apiBase}/publications`);
+      if (!res.ok) return [];
+      return await res.json();
     },
-    {
-      title: "CIC-SIoT: Clean-Slate Information-Centric Software-Defined Content Discovery and Distribution for IoT",
-      authors: "S. Biswas et al.",
-      journal: "IEEE Internet of Things Journal",
-      year: "2024",
-      citations: 12,
-      type: "Journal",
-      summary: "An innovative information-centric networking approach for efficient content discovery and distribution in IoT environments."
-    },
-    {
-      title: "Globechain: An interoperable blockchain for global sharing of healthcare data—a covid-19 perspective",
-      authors: "S. Biswas et al.",
-      journal: "IEEE Consumer Electronics Magazine",
-      year: "2021",
-      citations: 67,
-      type: "Journal",
-      summary: "A comprehensive blockchain solution for secure and interoperable healthcare data sharing during global health crises."
-    },
-    {
-      title: "Blockchain for e-health-care systems: Easier said than done",
-      authors: "S. Biswas et al.",
-      journal: "IEEE Computer",
-      year: "2020",
-      citations: 156,
-      type: "Journal",
-      summary: "A critical analysis of blockchain implementation challenges in healthcare systems with practical insights."
-    },
-    {
-      title: "Interoperability and Synchronization Management of Blockchain-Based Decentralized e-Health Systems",
-      authors: "S. Biswas et al.",
-      journal: "IEEE Transactions on Engineering Management",
-      year: "2020",
-      citations: 89,
-      type: "Journal",
-      summary: "Addressing synchronization and interoperability challenges in decentralized healthcare blockchain systems."
-    },
-    {
-      title: "PoBT: A Lightweight Consensus Algorithm for Scalable IoT Business Blockchain",
-      authors: "S. Biswas et al.",
-      journal: "IEEE Internet of Things Journal",
-      year: "2019",
-      citations: 234,
-      type: "Journal",
-      summary: "Introducing Proof of Block and Trade (PoBT), a novel consensus mechanism designed for IoT blockchain scalability."
-    }
-  ];
+  });
+
+  const publications = publicationsFromDB.length > 0 ? publicationsFromDB : [];
 
   return (
     <section id="publications" className="py-20 bg-background">
@@ -72,8 +29,13 @@ const Publications = () => {
         </div>
 
         <div className="max-w-5xl mx-auto space-y-6">
-          {publications.map((pub, index) => (
-            <div key={index} className="bg-card rounded-xl shadow-card hover:shadow-elevated transition-all duration-300 p-6 border-l-4 border-primary">
+          {publications.length === 0 ? (
+            <div className="text-center py-12 text-muted-foreground">
+              <p>No publications found. Please add publications from the admin panel.</p>
+            </div>
+          ) : (
+            publications.map((pub, index) => (
+              <div key={pub.id || index} className="bg-card rounded-xl shadow-card hover:shadow-elevated transition-all duration-300 p-6 border-l-4 border-primary">
               <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4">
                 <div className="flex items-center space-x-4 mb-2 lg:mb-0">
                   <div className="w-10 h-10 bg-gradient-primary rounded-lg flex items-center justify-center">
@@ -97,7 +59,18 @@ const Publications = () => {
                     <Users size={16} />
                     <span>{pub.citations} citations</span>
                   </div>
-                  <button className="flex items-center space-x-1 text-primary hover:text-primary-deep transition-colors">
+                  <button 
+                    className="flex items-center space-x-1 text-primary hover:text-primary-deep transition-colors"
+                    onClick={() => {
+                      if (pub.pdf_url) {
+                        window.open(pub.pdf_url, '_blank');
+                      } else if (pub.doi) {
+                        window.open(`https://doi.org/${pub.doi}`, '_blank');
+                      } else {
+                        alert(`${pub.title} - Full text available on request. Contact: sujitsujitbiswas@ieee.org`);
+                      }
+                    }}
+                  >
                     <ExternalLink size={16} />
                     <span>View</span>
                   </button>
@@ -115,16 +88,15 @@ const Publications = () => {
               <p className="text-muted-foreground mb-4">
                 <span className="font-medium">Published in:</span> {pub.journal}
               </p>
-              
-              <p className="text-foreground leading-relaxed">
-                {pub.summary}
-              </p>
             </div>
-          ))}
+          )))}
         </div>
 
         <div className="text-center mt-12">
-          <button className="inline-flex items-center px-6 py-3 border border-primary text-primary rounded-lg font-medium hover:bg-primary hover:text-white transition-all duration-300">
+          <button 
+            className="inline-flex items-center px-6 py-3 border border-primary text-primary rounded-lg font-medium hover:bg-primary hover:text-white transition-all duration-300"
+            onClick={() => window.open('https://scholar.google.com', '_blank')}
+          >
             <BookOpen size={18} className="mr-2" />
             View All Publications
           </button>

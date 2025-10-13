@@ -1,0 +1,105 @@
+-- ResearchHub MySQL schema (XAMPP compatible)
+CREATE DATABASE IF NOT EXISTS `researchhub` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE `researchhub`;
+
+-- Common: use UUID strings to match frontend types
+-- Note: Requires MySQL 8.0+ for DEFAULT (UUID())
+
+-- admin_users
+CREATE TABLE IF NOT EXISTS `admin_users` (
+  `id` CHAR(36) NOT NULL DEFAULT (UUID()),
+  `user_id` CHAR(36) NOT NULL UNIQUE,
+  `email` VARCHAR(255) NOT NULL,
+  `role` VARCHAR(50) NOT NULL DEFAULT 'admin',
+  `password_hash` VARCHAR(255) NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- courses
+CREATE TABLE IF NOT EXISTS `courses` (
+  `id` CHAR(36) NOT NULL DEFAULT (UUID()),
+  `code` VARCHAR(50) NOT NULL,
+  `title` VARCHAR(255) NOT NULL,
+  `description` TEXT NOT NULL,
+  `level` VARCHAR(50) NOT NULL,
+  `semester` VARCHAR(50) NOT NULL,
+  `year` INT NOT NULL,
+  `enrollment_count` INT DEFAULT 0,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- profile_info
+CREATE TABLE IF NOT EXISTS `profile_info` (
+  `id` CHAR(36) NOT NULL DEFAULT (UUID()),
+  `key` VARCHAR(100) NOT NULL UNIQUE,
+  `value` TEXT NOT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- projects (use JSON for arrays)
+CREATE TABLE IF NOT EXISTS `projects` (
+  `id` CHAR(36) NOT NULL DEFAULT (UUID()),
+  `title` VARCHAR(255) NOT NULL,
+  `description` TEXT NOT NULL,
+  `status` VARCHAR(50) NOT NULL DEFAULT 'ongoing',
+  `duration` VARCHAR(100) NOT NULL,
+  `collaborators` JSON NOT NULL DEFAULT (JSON_ARRAY()),
+  `funding` VARCHAR(255) NOT NULL,
+  `outcomes` JSON NOT NULL DEFAULT (JSON_ARRAY()),
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- publications
+CREATE TABLE IF NOT EXISTS `publications` (
+  `id` CHAR(36) NOT NULL DEFAULT (UUID()),
+  `title` VARCHAR(500) NOT NULL,
+  `authors` TEXT NOT NULL,
+  `journal` VARCHAR(255) NOT NULL,
+  `year` INT NOT NULL,
+  `volume` VARCHAR(100) NULL,
+  `pages` VARCHAR(100) NULL,
+  `doi` VARCHAR(255) NULL,
+  `citations` INT DEFAULT 0,
+  `type` VARCHAR(100) DEFAULT 'journal',
+  `pdf_url` TEXT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- research_areas
+CREATE TABLE IF NOT EXISTS `research_areas` (
+  `id` CHAR(36) NOT NULL DEFAULT (UUID()),
+  `title` VARCHAR(255) NOT NULL,
+  `description` TEXT NOT NULL,
+  `icon` VARCHAR(100) NOT NULL,
+  `order_index` INT NOT NULL DEFAULT 0,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- students
+CREATE TABLE IF NOT EXISTS `students` (
+  `id` CHAR(36) NOT NULL DEFAULT (UUID()),
+  `name` VARCHAR(255) NOT NULL,
+  `degree_type` VARCHAR(100) NOT NULL,
+  `research_topic` VARCHAR(500) NOT NULL,
+  `status` VARCHAR(50) NOT NULL DEFAULT 'current',
+  `start_year` INT NOT NULL,
+  `end_year` INT NULL,
+  `avatar_url` TEXT NULL,
+  `linkedin_url` TEXT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+

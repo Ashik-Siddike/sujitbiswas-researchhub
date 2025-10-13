@@ -1,4 +1,4 @@
-import { GraduationCap, Calendar, Users, Download, BookOpen } from 'lucide-react';
+import { GraduationCap, Calendar, Users, Eye, BookOpen } from 'lucide-react';
 
 const Teaching = () => {
   const courses = [
@@ -151,8 +151,9 @@ const Teaching = () => {
                         <button 
                           key={materialIndex}
                           className="flex items-center space-x-2 text-primary hover:text-primary-deep transition-colors text-sm w-full text-left"
+                          onClick={() => alert(`${material} - Content available for enrolled students`)}
                         >
-                          <Download size={16} />
+                          <Eye size={16} />
                           <span>{material}</span>
                         </button>
                       ))}

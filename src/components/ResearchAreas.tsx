@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
 import * as Icons from 'lucide-react';
 
 interface ResearchArea {
@@ -14,13 +13,10 @@ const ResearchAreas = () => {
   const { data: researchAreas = [], isLoading } = useQuery({
     queryKey: ['research-areas'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('research_areas')
-        .select('*')
-        .order('order_index');
-      
-      if (error) throw error;
-      return data as ResearchArea[];
+      const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
+      const res = await fetch(`${baseUrl}/research-areas`);
+      if (!res.ok) throw new Error('Failed to fetch research areas');
+      return (await res.json()) as ResearchArea[];
     },
   });
 
@@ -88,10 +84,13 @@ const ResearchAreas = () => {
                   </p>
 
                   <div className="mt-6 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0">
-                    <div className="flex items-center text-primary text-sm font-medium">
+                    <button 
+                      className="flex items-center text-primary text-sm font-medium"
+                      onClick={() => document.querySelector('#publications')?.scrollIntoView({ behavior: 'smooth' })}
+                    >
                       <span>Explore Research</span>
                       <Icons.ArrowRight size={16} className="ml-2 transform group-hover:translate-x-1 transition-transform duration-300" />
-                    </div>
+                    </button>
                   </div>
                 </div>
               </div>

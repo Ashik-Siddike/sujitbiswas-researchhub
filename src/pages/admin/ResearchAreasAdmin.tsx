@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -41,32 +40,28 @@ const ResearchAreasAdmin = () => {
 
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
 
   // Fetch research areas
   const { data: researchAreas = [], isLoading } = useQuery({
     queryKey: ['research-areas'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('research_areas')
-        .select('*')
-        .order('order_index');
-      
-      if (error) throw error;
-      return data as ResearchArea[];
+      const res = await fetch(`${apiBase}/research-areas`);
+      if (!res.ok) throw new Error('Failed to fetch research areas');
+      return (await res.json()) as ResearchArea[];
     },
   });
 
   // Create mutation
   const createMutation = useMutation({
     mutationFn: async (newArea: Omit<ResearchArea, 'id' | 'created_at' | 'updated_at'>) => {
-      const { data, error } = await supabase
-        .from('research_areas')
-        .insert([newArea])
-        .select()
-        .single();
-      
-      if (error) throw error;
-      return data;
+      const res = await fetch(`${apiBase}/research-areas`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newArea),
+      });
+      if (!res.ok) throw new Error('Failed to create research area');
+      return await res.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['research-areas'] });
@@ -89,15 +84,13 @@ const ResearchAreasAdmin = () => {
   // Update mutation
   const updateMutation = useMutation({
     mutationFn: async (updatedArea: Partial<ResearchArea> & { id: string }) => {
-      const { data, error } = await supabase
-        .from('research_areas')
-        .update(updatedArea)
-        .eq('id', updatedArea.id)
-        .select()
-        .single();
-      
-      if (error) throw error;
-      return data;
+      const res = await fetch(`${apiBase}/research-areas/${updatedArea.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedArea),
+      });
+      if (!res.ok) throw new Error('Failed to update research area');
+      return await res.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['research-areas'] });
@@ -120,12 +113,8 @@ const ResearchAreasAdmin = () => {
   // Delete mutation
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase
-        .from('research_areas')
-        .delete()
-        .eq('id', id);
-      
-      if (error) throw error;
+      const res = await fetch(`${apiBase}/research-areas/${id}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Failed to delete research area');
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['research-areas'] });

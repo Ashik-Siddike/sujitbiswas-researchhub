@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -48,30 +47,27 @@ const ProjectsAdmin = () => {
   const queryClient = useQueryClient();
 
   // Fetch projects
+  const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
+
   const { data: projects = [], isLoading } = useQuery({
     queryKey: ['projects'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('projects')
-        .select('*')
-        .order('created_at', { ascending: false });
-      
-      if (error) throw error;
-      return data as Project[];
+      const res = await fetch(`${apiBase}/projects`);
+      if (!res.ok) throw new Error('Failed to fetch projects');
+      return (await res.json()) as Project[];
     },
   });
 
   // Create mutation
   const createMutation = useMutation({
     mutationFn: async (newProject: Omit<Project, 'id' | 'created_at' | 'updated_at'>) => {
-      const { data, error } = await supabase
-        .from('projects')
-        .insert([newProject])
-        .select()
-        .single();
-      
-      if (error) throw error;
-      return data;
+      const res = await fetch(`${apiBase}/projects`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newProject),
+      });
+      if (!res.ok) throw new Error('Failed to create project');
+      return await res.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['projects'] });
@@ -96,15 +92,13 @@ const ProjectsAdmin = () => {
   // Update mutation
   const updateMutation = useMutation({
     mutationFn: async (updatedProject: Partial<Project> & { id: string }) => {
-      const { data, error } = await supabase
-        .from('projects')
-        .update(updatedProject)
-        .eq('id', updatedProject.id)
-        .select()
-        .single();
-      
-      if (error) throw error;
-      return data;
+      const res = await fetch(`${apiBase}/projects/${updatedProject.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedProject),
+      });
+      if (!res.ok) throw new Error('Failed to update project');
+      return await res.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['projects'] });
@@ -127,12 +121,8 @@ const ProjectsAdmin = () => {
   // Delete mutation
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase
-        .from('projects')
-        .delete()
-        .eq('id', id);
-      
-      if (error) throw error;
+      const res = await fetch(`${apiBase}/projects/${id}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Failed to delete project');
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['projects'] });

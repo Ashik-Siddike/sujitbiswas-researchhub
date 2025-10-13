@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
-import { User } from '@supabase/supabase-js';
+import { useAuth } from './useAuth';
 
 interface AdminUser {
   id: string;
@@ -11,63 +10,23 @@ interface AdminUser {
 }
 
 export const useAdminAuth = () => {
-  const [user, setUser] = useState<User | null>(null);
+  const { user: authUser, signOut: baseSignOut } = useAuth();
+  const [user, setUser] = useState<{ id: string; email: string; role: string } | null>(null);
   const [adminUser, setAdminUser] = useState<AdminUser | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Get initial session
-    const getInitialSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user) {
-        setUser(session.user);
-        await checkAdminStatus(session.user.id);
-      }
-      setLoading(false);
-    };
+    setUser(authUser || null);
+    setAdminUser(authUser ? { id: authUser.id, user_id: authUser.id, email: authUser.email, role: authUser.role, created_at: '' } : null);
+    setLoading(false);
+  }, [authUser]);
 
-    getInitialSession();
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        if (session?.user) {
-          setUser(session.user);
-          await checkAdminStatus(session.user.id);
-        } else {
-          setUser(null);
-          setAdminUser(null);
-        }
-        setLoading(false);
-      }
-    );
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  const checkAdminStatus = async (userId: string) => {
-    try {
-      const { data, error } = await supabase
-        .from('admin_users')
-        .select('*')
-        .eq('user_id', userId)
-        .single();
-
-      if (error || !data) {
-        setAdminUser(null);
-        return false;
-      }
-
-      setAdminUser(data);
-      return true;
-    } catch (error) {
-      setAdminUser(null);
-      return false;
-    }
+  const checkAdminStatus = async (_userId: string) => {
+    return !!authUser && authUser.role === 'admin';
   };
 
   const signOut = async () => {
-    await supabase.auth.signOut();
+    await baseSignOut();
     setUser(null);
     setAdminUser(null);
   };

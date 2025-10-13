@@ -51,32 +51,28 @@ const CoursesAdmin = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
+  const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
+
   // Fetch courses
   const { data: courses = [], isLoading } = useQuery({
     queryKey: ['courses'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('courses')
-        .select('*')
-        .order('year', { ascending: false })
-        .order('semester');
-      
-      if (error) throw error;
-      return data as Course[];
+      const res = await fetch(`${apiBase}/courses`);
+      if (!res.ok) throw new Error('Failed to fetch courses');
+      return (await res.json()) as Course[];
     },
   });
 
   // Create mutation
   const createMutation = useMutation({
     mutationFn: async (newCourse: Omit<Course, 'id' | 'created_at' | 'updated_at'>) => {
-      const { data, error } = await supabase
-        .from('courses')
-        .insert([newCourse])
-        .select()
-        .single();
-      
-      if (error) throw error;
-      return data;
+      const res = await fetch(`${apiBase}/courses`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newCourse),
+      });
+      if (!res.ok) throw new Error('Failed to create course');
+      return await res.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['courses'] });
@@ -102,15 +98,13 @@ const CoursesAdmin = () => {
   // Update mutation
   const updateMutation = useMutation({
     mutationFn: async (updatedCourse: Partial<Course> & { id: string }) => {
-      const { data, error } = await supabase
-        .from('courses')
-        .update(updatedCourse)
-        .eq('id', updatedCourse.id)
-        .select()
-        .single();
-      
-      if (error) throw error;
-      return data;
+      const res = await fetch(`${apiBase}/courses/${updatedCourse.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedCourse),
+      });
+      if (!res.ok) throw new Error('Failed to update course');
+      return await res.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['courses'] });
@@ -133,12 +127,8 @@ const CoursesAdmin = () => {
   // Delete mutation
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase
-        .from('courses')
-        .delete()
-        .eq('id', id);
-      
-      if (error) throw error;
+      const res = await fetch(`${apiBase}/courses/${id}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Failed to delete course');
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['courses'] });

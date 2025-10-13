@@ -1,30 +1,21 @@
 import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/hooks/useAuth';
-import { NavLink } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { LogIn, Shield, Menu, X } from 'lucide-react';
+import { Shield, Menu, X } from 'lucide-react';
 import { useState } from 'react';
 
 const Header = () => {
-  const { user, isAdmin, signOut } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   
+  const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
+
   const { data: profileInfo } = useQuery({
     queryKey: ['profile-info'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('profile_info')
-        .select('key, value');
-      
-      if (error) throw error;
-      
-      const profileMap: Record<string, string> = {};
-      data.forEach((item) => {
-        profileMap[item.key] = item.value;
-      });
-      
-      return profileMap;
+      const res = await fetch(`${apiBase}/profile-info`);
+      if (!res.ok) throw new Error('Failed to fetch profile info');
+      const rows: { key: string; value: string }[] = await res.json();
+      const map: Record<string, string> = {};
+      rows.forEach((item) => { map[item.key] = item.value; });
+      return map;
     },
   });
 
@@ -82,32 +73,8 @@ const Header = () => {
             ))}
           </div>
 
-          {/* Auth & Mobile Menu */}
+          {/* Mobile Menu Button */}
           <div className="flex items-center gap-4">
-            {user ? (
-              <div className="hidden lg:flex items-center gap-3">
-                {isAdmin && (
-                  <NavLink to="/admin">
-                    <Button variant="outline" size="sm" className="shadow-card hover:shadow-elevated transition-shadow">
-                      <Shield className="w-4 h-4 mr-2" />
-                      Admin
-                    </Button>
-                  </NavLink>
-                )}
-                <Button onClick={signOut} variant="outline" size="sm">
-                  Sign Out
-                </Button>
-              </div>
-            ) : (
-              <NavLink to="/auth" className="hidden lg:block">
-                <Button variant="outline" size="sm" className="shadow-card hover:shadow-elevated transition-shadow">
-                  <LogIn className="w-4 h-4 mr-2" />
-                  Admin Login
-                </Button>
-              </NavLink>
-            )}
-            
-            {/* Mobile Menu Button */}
             <button
               className="lg:hidden p-2 rounded-lg hover:bg-muted/50 transition-colors"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -130,32 +97,6 @@ const Header = () => {
                   {item.name}
                 </button>
               ))}
-              
-              {/* Mobile Auth Buttons */}
-              <div className="pt-4 border-t border-border/50 space-y-2">
-                {user ? (
-                  <>
-                    {isAdmin && (
-                      <NavLink to="/admin" className="block">
-                        <Button variant="outline" size="sm" className="w-full justify-start">
-                          <Shield className="w-4 h-4 mr-2" />
-                          Admin
-                        </Button>
-                      </NavLink>
-                    )}
-                    <Button onClick={signOut} variant="outline" size="sm" className="w-full">
-                      Sign Out
-                    </Button>
-                  </>
-                ) : (
-                  <NavLink to="/auth" className="block">
-                    <Button variant="outline" size="sm" className="w-full justify-start">
-                      <LogIn className="w-4 h-4 mr-2" />
-                      Admin Login
-                    </Button>
-                  </NavLink>
-                )}
-              </div>
             </div>
           </div>
         )}

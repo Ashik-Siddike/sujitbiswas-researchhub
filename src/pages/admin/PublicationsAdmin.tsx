@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -55,30 +54,27 @@ const PublicationsAdmin = () => {
   const queryClient = useQueryClient();
 
   // Fetch publications
+  const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
+
   const { data: publications = [], isLoading } = useQuery({
     queryKey: ['publications'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('publications')
-        .select('*')
-        .order('year', { ascending: false });
-      
-      if (error) throw error;
-      return data as Publication[];
+      const res = await fetch(`${apiBase}/publications`);
+      if (!res.ok) throw new Error('Failed to fetch publications');
+      return (await res.json()) as Publication[];
     },
   });
 
   // Create mutation
   const createMutation = useMutation({
     mutationFn: async (newPublication: Omit<Publication, 'id' | 'created_at' | 'updated_at'>) => {
-      const { data, error } = await supabase
-        .from('publications')
-        .insert([newPublication])
-        .select()
-        .single();
-      
-      if (error) throw error;
-      return data;
+      const res = await fetch(`${apiBase}/publications`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newPublication),
+      });
+      if (!res.ok) throw new Error('Failed to create publication');
+      return await res.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['publications'] });
@@ -104,15 +100,13 @@ const PublicationsAdmin = () => {
   // Update mutation
   const updateMutation = useMutation({
     mutationFn: async (updatedPublication: Partial<Publication> & { id: string }) => {
-      const { data, error } = await supabase
-        .from('publications')
-        .update(updatedPublication)
-        .eq('id', updatedPublication.id)
-        .select()
-        .single();
-      
-      if (error) throw error;
-      return data;
+      const res = await fetch(`${apiBase}/publications/${updatedPublication.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedPublication),
+      });
+      if (!res.ok) throw new Error('Failed to update publication');
+      return await res.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['publications'] });
@@ -135,12 +129,8 @@ const PublicationsAdmin = () => {
   // Delete mutation
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase
-        .from('publications')
-        .delete()
-        .eq('id', id);
-      
-      if (error) throw error;
+      const res = await fetch(`${apiBase}/publications/${id}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Failed to delete publication');
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['publications'] });

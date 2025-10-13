@@ -78,12 +78,21 @@ export default function Hero() {
             </div>
             
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <Button size="lg" className="group bg-blue-600 hover:bg-blue-700 text-white px-8 py-3">
+              <Button 
+                size="lg" 
+                className="group bg-blue-600 hover:bg-blue-700 text-white px-8 py-3"
+                onClick={() => document.querySelector('#research')?.scrollIntoView({ behavior: 'smooth' })}
+              >
                 View Research
                 <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
               </Button>
-              <Button variant="outline" size="lg" className="px-8 py-3 border-blue-200 text-blue-700 hover:bg-blue-50">
-                Download CV
+              <Button 
+                variant="outline" 
+                size="lg" 
+                className="px-8 py-3 border-blue-200 text-blue-700 hover:bg-blue-50"
+                onClick={() => document.querySelector('#about')?.scrollIntoView({ behavior: 'smooth' })}
+              >
+                View Profile
               </Button>
             </div>
             

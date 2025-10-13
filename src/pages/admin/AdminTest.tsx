@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
+import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -19,6 +18,7 @@ const AdminTest = () => {
   const [isRunning, setIsRunning] = useState(false);
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
 
   const addTestResult = (operation: string, status: 'success' | 'error' | 'pending', message: string, details?: any) => {
     setTestResults(prev => [...prev, { operation, status, message, details }]);
@@ -29,84 +29,76 @@ const AdminTest = () => {
     setTestResults([]);
     
     try {
-      // Test 1: Check database connection
-      addTestResult('Database Connection', 'pending', 'Testing connection to Supabase...');
-      const { data, error } = await supabase.from('publications').select('count').limit(1);
-      if (error) throw error;
-      addTestResult('Database Connection', 'success', 'Successfully connected to database');
+      // Test 1: API Connection
+      addTestResult('API Connection', 'pending', 'Testing connection to MySQL API...');
+      const healthRes = await fetch(`${apiBase.replace('/api', '')}/health`);
+      if (!healthRes.ok) throw new Error('Health check failed');
+      addTestResult('API Connection', 'success', 'Successfully connected to API');
 
-      // Test 2: Test SELECT operation
-      addTestResult('SELECT Operation', 'pending', 'Testing SELECT operation on publications...');
-      const { data: publications, error: selectError } = await supabase
-        .from('publications')
-        .select('*')
-        .limit(5);
+      // Test 2: SELECT Operation
+      addTestResult('SELECT Operation', 'pending', 'Testing SELECT on publications...');
+      const pubRes = await fetch(`${apiBase}/publications`);
+      if (!pubRes.ok) throw new Error('SELECT failed');
+      const publications = await pubRes.json();
+      addTestResult('SELECT Operation', 'success', `Retrieved ${publications.length} publications`);
+
+      // Test 3: INSERT Operation
+      addTestResult('INSERT Operation', 'pending', 'Testing INSERT operation...');
+      const testPub = {
+        title: 'Test Publication for CRUD Testing',
+        authors: 'Test Author',
+        journal: 'Test Journal',
+        year: 2024,
+        type: 'Test',
+        citations: 0
+      };
+      const insertRes = await fetch(`${apiBase}/publications`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(testPub),
+      });
+      if (!insertRes.ok) throw new Error('INSERT failed');
+      const inserted = await insertRes.json();
+      addTestResult('INSERT Operation', 'success', 'Successfully inserted test publication', inserted);
+
+      // Test 4: UPDATE Operation
+      addTestResult('UPDATE Operation', 'pending', 'Testing UPDATE operation...');
+      const updateRes = await fetch(`${apiBase}/publications/${inserted.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...testPub, title: 'Updated Test Publication' }),
+      });
+      if (!updateRes.ok) throw new Error('UPDATE failed');
+      const updated = await updateRes.json();
+      addTestResult('UPDATE Operation', 'success', 'Successfully updated publication', updated);
+
+      // Test 5: DELETE Operation
+      addTestResult('DELETE Operation', 'pending', 'Testing DELETE operation...');
+      const deleteRes = await fetch(`${apiBase}/publications/${inserted.id}`, { method: 'DELETE' });
+      if (!deleteRes.ok) throw new Error('DELETE failed');
+      addTestResult('DELETE Operation', 'success', 'Successfully deleted test publication');
+
+      // Test 6: All Tables
+      const tables = [
+        { name: 'research_areas', label: 'Research Areas' },
+        { name: 'projects', label: 'Projects' },
+        { name: 'courses', label: 'Courses' },
+        { name: 'students', label: 'Students' },
+        { name: 'profile-info', label: 'Profile Info' }
+      ];
       
-      if (selectError) throw selectError;
-      addTestResult('SELECT Operation', 'success', `Successfully retrieved ${publications?.length || 0} publications`);
-
-      // Test 3: Test INSERT operation
-      if (publications && publications.length > 0) {
-        addTestResult('INSERT Operation', 'pending', 'Testing INSERT operation...');
-        
-        const testPublication = {
-          title: 'Test Publication for CRUD Testing',
-          authors: 'Test Author',
-          journal: 'Test Journal',
-          year: 2024,
-          type: 'Test',
-          citations: 0
-        };
-
-        const { data: inserted, error: insertError } = await supabase
-          .from('publications')
-          .insert([testPublication])
-          .select()
-          .single();
-
-        if (insertError) throw insertError;
-        addTestResult('INSERT Operation', 'success', 'Successfully inserted test publication', inserted);
-
-        // Test 4: Test UPDATE operation
-        addTestResult('UPDATE Operation', 'pending', 'Testing UPDATE operation...');
-        const { data: updated, error: updateError } = await supabase
-          .from('publications')
-          .update({ title: 'Updated Test Publication' })
-          .eq('id', inserted.id)
-          .select()
-          .single();
-
-        if (updateError) throw updateError;
-        addTestResult('UPDATE Operation', 'success', 'Successfully updated publication', updated);
-
-        // Test 5: Test DELETE operation
-        addTestResult('DELETE Operation', 'pending', 'Testing DELETE operation...');
-        const { error: deleteError } = await supabase
-          .from('publications')
-          .delete()
-          .eq('id', inserted.id);
-
-        if (deleteError) throw deleteError;
-        addTestResult('DELETE Operation', 'success', 'Successfully deleted test publication');
-      }
-
-      // Test 6: Test all tables
-      const tables = ['research_areas', 'projects', 'courses', 'students', 'profile_info'];
       for (const table of tables) {
-        addTestResult(`${table.toUpperCase()} Table`, 'pending', `Testing ${table} table...`);
-        const { data: tableData, error: tableError } = await supabase
-          .from(table)
-          .select('*')
-          .limit(1);
-        
-        if (tableError) throw tableError;
-        addTestResult(`${table.toUpperCase()} Table`, 'success', `Successfully accessed ${table} table (${tableData?.length || 0} records)`);
+        addTestResult(`${table.label} Table`, 'pending', `Testing ${table.label}...`);
+        const res = await fetch(`${apiBase}/${table.name}`);
+        if (!res.ok) throw new Error(`${table.label} access failed`);
+        const data = await res.json();
+        addTestResult(`${table.label} Table`, 'success', `Successfully accessed (${data.length} records)`);
       }
 
-      // Test 7: Test React Query integration
-      addTestResult('React Query Integration', 'pending', 'Testing React Query with Supabase...');
+      // Test 7: React Query Integration
+      addTestResult('React Query Integration', 'pending', 'Testing React Query...');
       queryClient.invalidateQueries({ queryKey: ['publications'] });
-      addTestResult('React Query Integration', 'success', 'Successfully integrated React Query with Supabase');
+      addTestResult('React Query Integration', 'success', 'Successfully integrated React Query with MySQL API');
 
       toast({
         title: "Success",
@@ -160,9 +152,9 @@ const AdminTest = () => {
   return (
     <div className="p-6">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold">Admin Panel CRUD Test Suite</h1>
+        <h1 className="text-3xl font-bold">Admin Panel MySQL API Test Suite</h1>
         <p className="text-muted-foreground">
-          Test all CRUD operations to ensure the admin panel is working correctly
+          Test all CRUD operations to ensure the admin panel is working correctly with MySQL
         </p>
       </div>
 
@@ -203,7 +195,7 @@ const AdminTest = () => {
             <div className="text-sm text-muted-foreground">
               <p>This will test:</p>
               <ul className="list-disc list-inside mt-2 space-y-1">
-                <li>Database connection</li>
+                <li>MySQL API connection</li>
                 <li>SELECT operations</li>
                 <li>INSERT operations</li>
                 <li>UPDATE operations</li>
@@ -273,4 +265,3 @@ const AdminTest = () => {
 };
 
 export default AdminTest;
-

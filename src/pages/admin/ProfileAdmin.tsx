@@ -32,31 +32,28 @@ const ProfileAdmin = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
+  const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
+
   // Fetch profile info
   const { data: profileInfo = [], isLoading } = useQuery({
     queryKey: ['profile-info'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('profile_info')
-        .select('*')
-        .order('key');
-      
-      if (error) throw error;
-      return data as ProfileInfo[];
+      const res = await fetch(`${apiBase}/profile-info`);
+      if (!res.ok) throw new Error('Failed to fetch profile info');
+      return (await res.json()) as ProfileInfo[];
     },
   });
 
   // Create mutation
   const createMutation = useMutation({
     mutationFn: async (newInfo: Omit<ProfileInfo, 'id' | 'created_at' | 'updated_at'>) => {
-      const { data, error } = await supabase
-        .from('profile_info')
-        .insert([newInfo])
-        .select()
-        .single();
-      
-      if (error) throw error;
-      return data;
+      const res = await fetch(`${apiBase}/profile-info`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newInfo),
+      });
+      if (!res.ok) throw new Error('Failed to create profile info');
+      return await res.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['profile-info'] });
@@ -79,15 +76,13 @@ const ProfileAdmin = () => {
   // Update mutation
   const updateMutation = useMutation({
     mutationFn: async (updatedInfo: Partial<ProfileInfo> & { id: string }) => {
-      const { data, error } = await supabase
-        .from('profile_info')
-        .update(updatedInfo)
-        .eq('id', updatedInfo.id)
-        .select()
-        .single();
-      
-      if (error) throw error;
-      return data;
+      const res = await fetch(`${apiBase}/profile-info/${updatedInfo.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedInfo),
+      });
+      if (!res.ok) throw new Error('Failed to update profile info');
+      return await res.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['profile-info'] });
@@ -110,12 +105,8 @@ const ProfileAdmin = () => {
   // Delete mutation
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase
-        .from('profile_info')
-        .delete()
-        .eq('id', id);
-      
-      if (error) throw error;
+      const res = await fetch(`${apiBase}/profile-info/${id}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Failed to delete profile info');
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['profile-info'] });

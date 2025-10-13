@@ -1,7 +1,19 @@
 import { Folder, Clock, Users, Link, ArrowRight } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
 
 const Projects = () => {
-  const projects = [
+  const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
+  
+  const { data: projectsFromDB = [] } = useQuery({
+    queryKey: ['projects-public'],
+    queryFn: async () => {
+      const res = await fetch(`${apiBase}/projects`);
+      if (!res.ok) return [];
+      return await res.json();
+    },
+  });
+
+  const projects = projectsFromDB.length > 0 ? projectsFromDB : [
     {
       title: "iCARE: Intelligent, Customised Admissions and Recruitment Engagement platform",
       description: "Developing an AI-powered platform to revolutionize university admissions and recruitment processes with intelligent matching and personalized engagement.",
@@ -70,7 +82,10 @@ const Projects = () => {
                   </span>
                 </div>
                 
-                <button className="p-2 text-muted-foreground hover:text-primary transition-colors">
+                <button 
+                  className="p-2 text-muted-foreground hover:text-primary transition-colors"
+                  onClick={() => alert(`Project: ${project.title}\n\nFor collaboration or more details, please contact: sujitsujitbiswas@ieee.org`)}
+                >
                   <Link size={18} />
                 </button>
               </div>
@@ -91,7 +106,13 @@ const Projects = () => {
                 
                 <div className="flex items-start text-sm text-muted-foreground">
                   <Users size={16} className="mr-2 mt-0.5" />
-                  <span>{project.collaborators.join(', ')}</span>
+                  <span>
+                    {Array.isArray(project.collaborators) 
+                      ? project.collaborators.join(', ') 
+                      : typeof project.collaborators === 'string' 
+                        ? project.collaborators 
+                        : 'No collaborators listed'}
+                  </span>
                 </div>
                 
                 <div className="text-sm">
@@ -103,7 +124,7 @@ const Projects = () => {
               <div className="border-t pt-4">
                 <h4 className="font-medium text-foreground mb-2">Key Outcomes:</h4>
                 <div className="flex flex-wrap gap-2">
-                  {project.outcomes.map((outcome, outcomeIndex) => (
+                  {(Array.isArray(project.outcomes) ? project.outcomes : []).map((outcome, outcomeIndex) => (
                     <span 
                       key={outcomeIndex}
                       className="bg-muted px-3 py-1 rounded-full text-sm text-foreground"
@@ -115,7 +136,10 @@ const Projects = () => {
               </div>
 
               <div className="mt-4 pt-4 border-t">
-                <button className="flex items-center text-primary hover:text-primary-deep transition-colors font-medium">
+                <button 
+                  className="flex items-center text-primary hover:text-primary-deep transition-colors font-medium"
+                  onClick={() => alert(`${project.title}\n\nFor more information, contact: sujitsujitbiswas@ieee.org`)}
+                >
                   Learn More
                   <ArrowRight size={16} className="ml-2" />
                 </button>

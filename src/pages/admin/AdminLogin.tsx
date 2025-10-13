@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -19,43 +19,18 @@ const AdminLogin = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  const { signIn } = useAuth();
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
 
     try {
-      // Sign in with Supabase Auth
-      const { data, error: signInError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (signInError) {
-        throw signInError;
-      }
-
-      if (data.user) {
-        // Check if user is admin
-        const { data: adminCheck, error: adminError } = await supabase
-          .from('admin_users')
-          .select('*')
-          .eq('user_id', data.user.id)
-          .single();
-
-        if (adminError || !adminCheck) {
-          // User is not admin, sign them out
-          await supabase.auth.signOut();
-          throw new Error('Access denied. You are not authorized as an admin.');
-        }
-
-        // User is admin, redirect to admin dashboard
-        toast({
-          title: "Success",
-          description: "Admin login successful",
-        });
-        navigate('/admin');
-      }
+      const { error } = await signIn(email, password);
+      if (error) throw new Error(error.message || 'Login failed');
+      toast({ title: 'Success', description: 'Admin login successful' });
+      navigate('/admin');
     } catch (error: any) {
       setError(error.message || 'Login failed');
       toast({
@@ -73,37 +48,11 @@ const AdminLogin = () => {
     setError('');
 
     try {
-      // Create a new user account
-      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-        email,
-        password,
+      // For local JWT auth, admin creation is done manually in database
+      toast({
+        title: "Info",
+        description: "Admin accounts are created manually in the database. Contact system administrator.",
       });
-
-      if (signUpError) {
-        throw signUpError;
-      }
-
-      if (signUpData.user) {
-        // Add user to admin_users table
-        const { error: adminError } = await supabase
-          .from('admin_users')
-          .insert([
-            {
-              user_id: signUpData.user.id,
-              email: signUpData.user.email!,
-              role: 'admin'
-            }
-          ]);
-
-        if (adminError) {
-          throw adminError;
-        }
-
-        toast({
-          title: "Success",
-          description: "Admin account created successfully. Please check your email for verification.",
-        });
-      }
     } catch (error: any) {
       setError(error.message || 'Failed to create admin account');
       toast({

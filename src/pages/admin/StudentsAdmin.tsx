@@ -54,31 +54,28 @@ const StudentsAdmin = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
+  const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
+
   // Fetch students
   const { data: students = [], isLoading } = useQuery({
     queryKey: ['students'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('students')
-        .select('*')
-        .order('start_year', { ascending: false });
-      
-      if (error) throw error;
-      return data as Student[];
+      const res = await fetch(`${apiBase}/students`);
+      if (!res.ok) throw new Error('Failed to fetch students');
+      return (await res.json()) as Student[];
     },
   });
 
   // Create mutation
   const createMutation = useMutation({
     mutationFn: async (newStudent: Omit<Student, 'id' | 'created_at' | 'updated_at'>) => {
-      const { data, error } = await supabase
-        .from('students')
-        .insert([newStudent])
-        .select()
-        .single();
-      
-      if (error) throw error;
-      return data;
+      const res = await fetch(`${apiBase}/students`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newStudent),
+      });
+      if (!res.ok) throw new Error('Failed to create student');
+      return await res.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['students'] });
@@ -104,15 +101,13 @@ const StudentsAdmin = () => {
   // Update mutation
   const updateMutation = useMutation({
     mutationFn: async (updatedStudent: Partial<Student> & { id: string }) => {
-      const { data, error } = await supabase
-        .from('students')
-        .update(updatedStudent)
-        .eq('id', updatedStudent.id)
-        .select()
-        .single();
-      
-      if (error) throw error;
-      return data;
+      const res = await fetch(`${apiBase}/students/${updatedStudent.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedStudent),
+      });
+      if (!res.ok) throw new Error('Failed to update student');
+      return await res.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['students'] });
@@ -135,12 +130,8 @@ const StudentsAdmin = () => {
   // Delete mutation
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase
-        .from('students')
-        .delete()
-        .eq('id', id);
-      
-      if (error) throw error;
+      const res = await fetch(`${apiBase}/students/${id}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Failed to delete student');
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['students'] });

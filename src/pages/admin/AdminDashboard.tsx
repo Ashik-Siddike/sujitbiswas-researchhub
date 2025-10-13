@@ -1,27 +1,16 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { FileText, Lightbulb, FolderOpen, GraduationCap, Users, Settings } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
 
 const AdminDashboard = () => {
+  const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
+
   const { data: stats } = useQuery({
     queryKey: ['admin-stats'],
     queryFn: async () => {
-      const [publications, researchAreas, projects, courses, students] = await Promise.all([
-        supabase.from('publications').select('id', { count: 'exact', head: true }),
-        supabase.from('research_areas').select('id', { count: 'exact', head: true }),
-        supabase.from('projects').select('id', { count: 'exact', head: true }),
-        supabase.from('courses').select('id', { count: 'exact', head: true }),
-        supabase.from('students').select('id', { count: 'exact', head: true }),
-      ]);
-
-      return {
-        publications: publications.count || 0,
-        researchAreas: researchAreas.count || 0,
-        projects: projects.count || 0,
-        courses: courses.count || 0,
-        students: students.count || 0,
-      };
+      const res = await fetch(`${apiBase}/admin/stats`);
+      if (!res.ok) throw new Error('Failed to fetch admin stats');
+      return await res.json();
     },
   });
 
