@@ -107,34 +107,32 @@ POST http://localhost:4000/api/auth/login
 
 Client-এ টোকেন localStorage-এ রেখে Authorization: Bearer <token> হেডার ব্যবহার করুন।
 
-### পুরনো সাইট থেকে ডেটা ইমপোর্ট করুন
+### সম্পূর্ণ ডাটাবেস সেটআপ (একবারে)
 
-পুরনো সাইট (https://sujitbiswas.info) থেকে সব ডেটা ইমপোর্ট করতে:
+**সবচেয়ে সহজ উপায় - একটি ফাইলে সব কিছু:**
 
-**১. প্রাথমিক ডেটা (Profile, Research Areas, Projects, Courses, Students):**
-```sql
--- phpMyAdmin → SQL এ গিয়ে চালান
-SOURCE server/sql/seed_from_old_site.sql;
-```
+1. phpMyAdmin খুলুন → SQL ট্যাবে যান
+2. `server/sql/complete_setup.sql` ফাইল কপি করে পেস্ট করুন
+3. "Go" বাটনে ক্লিক করুন
 
-**২. সব Publications লিঙ্ক সহ (37টি পাবলিকেশন):**
-```sql
--- phpMyAdmin → SQL এ গিয়ে চালান
-SOURCE server/sql/publications_with_links.sql;
-```
-
-এতে যুক্ত হবে:
-- Profile Info (নাম, পদবী, ইউনিভার্সিটি, CV লিঙ্ক, Google Scholar লিঙ্ক)
-- Research Areas (6টি এরিয়া)
-- **Publications (37টি - সব লিঙ্ক সহ IEEE, ACM, arXiv, Springer, MDPI, etc.)**
-- Projects (চলমান ও সম্পন্ন প্রজেক্ট)
-- Courses (শেখানো কোর্স)
-- Students (বর্তমান ও প্রাক্তন ছাত্র)
+এতে স্বয়ংক্রিয়ভাবে যুক্ত হবে:
+- ✅ সব 7টি টেবিল তৈরি (admin_users, courses, profile_info, projects, publications, research_areas, students)
+- ✅ Admin User (Email: sujitsujitbiswas@ieee.org, Password: @ieee.org4141daerES%)
+- ✅ Profile Info (নাম, পদবী, ইউনিভার্সিটি, CV লিঙ্ক, Google Scholar লিঙ্ক)
+- ✅ Research Areas (6টি এরিয়া)
+- ✅ **Publications (37টি - সব লিঙ্ক সহ IEEE, ACM, arXiv, Springer, MDPI, etc.)**
+- ✅ Projects (3টি - চলমান ও সম্পন্ন)
+- ✅ Courses (3টি কোর্স)
+- ✅ Students (4টি ছাত্র)
 
 **Publications View বাটন:**
-- যদি PDF URL থাকে → সরাসরি PDF ওপেন হবে
+- যদি PDF URL থাকে → সরাসরি PDF ওপেন হবে (নতুন ট্যাবে)
 - যদি DOI থাকে → DOI লিঙ্কে redirect হবে
 - না হলে → Contact মেসেজ দেখাবে
+
+---
+
+### ম্যানুয়াল সেটআপ (যদি উপরের পদ্ধতি কাজ না করে)
 
 phpMyAdmin SQL Editor-এ নিচের SQL ব্লক রান করুন (সব টেবিল):
 

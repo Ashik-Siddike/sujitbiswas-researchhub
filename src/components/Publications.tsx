@@ -13,7 +13,7 @@ const Publications = () => {
     },
   });
 
-  const publications = publicationsFromDB.length > 0 ? publicationsFromDB : [];
+  const publications = publicationsFromDB;
 
   return (
     <section id="publications" className="py-20 bg-background">
